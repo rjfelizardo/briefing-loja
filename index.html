@@ -100,6 +100,7 @@
     letter-spacing:-.02em;
   }
   .hero p.lead{margin:0 0 22px;max-width:50ch;font-size:18px;color:#d5e3f0}
+  @media (max-width:759px){.qd{display:none}}
   .chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
   .chips li{
     display:inline-flex;align-items:center;gap:7px;
@@ -283,8 +284,8 @@
 <header class="hero">
   <div class="wrap">
     <div class="brand"><img src="/logo.png" alt="Logo Grupo Bridge" width="68" height="68"><div class="nome">Grupo Bridge<small>Criando pontes</small></div></div>
-    <h1 id="titulo">Vamos desenhar o seu projeto</h1>
-    <p class="lead">Responda com calma. Com essas informações eu te envio uma proposta com valor e prazo sob medida.</p>
+    <h1 id="titulo">Vamos desenhar<br>o seu projeto</h1>
+    <p class="lead">Responda com calma. Com essas informações<br class="qd"> eu te envio uma proposta com valor<br class="qd"> e prazo sob medida.</p>
     <ul class="chips">
       <li><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Leva uns 3 minutos</li>
       <li><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg>Sem compromisso</li>
@@ -650,6 +651,8 @@
     }
   }
 
+  function setTitulo(t){ $('titulo').innerHTML = t.replace(/^(\S+ \S+) /, '$1<br>'); }
+
   function escolherTipos(){
     tiposSel = ORDEM.filter(function(id){
       return form.querySelector('input[name="tipo"][value="'+id+'"]').checked;
@@ -667,17 +670,17 @@
     $('blocoComum').hidden = !tem;
     $('fsObs').hidden = !tem;
     $('btnEnviar').hidden = !tem;
-    if (!tem){ document.title = 'Briefing do seu projeto | Grupo Bridge'; $('titulo').textContent = 'Vamos desenhar o seu projeto'; return; }
+    if (!tem){ document.title = 'Briefing do seu projeto | Grupo Bridge'; setTitulo('Vamos desenhar o seu projeto'); return; }
 
     if (multi){
       var nomes = tiposSel.map(function(id){ return TIPOS[id].nome; });
-      $('titulo').textContent = 'Vamos desenhar o seu projeto';
+      setTitulo('Vamos desenhar o seu projeto');
       $('noticeTitulo').textContent = 'Vários tipos, um só orçamento';
       $('noticeTexto').textContent = 'Você escolheu ' + nomes.join(', ').replace(/, ([^,]*)$/, ' e $1') + '. Responda as perguntas de cada parte e, no fim, informe o prazo e o investimento do projeto todo. Eu monto uma proposta única.';
       document.title = 'Briefing | Grupo Bridge';
     } else {
       var t = TIPOS[tiposSel[0]];
-      $('titulo').textContent = t.titulo;
+      setTitulo(t.titulo);
       $('noticeTitulo').textContent = t.noticeT;
       $('noticeTexto').textContent = t.noticeX;
       document.title = t.nome + ' | Briefing | Grupo Bridge';
