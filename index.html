@@ -73,11 +73,11 @@
   header.hero .wrap{position:relative;z-index:1}
   @media (min-width:760px){
     header.hero::before{
-      left:auto;width:62%;
-      background:url("/hero.jpg") 0% 25%/cover no-repeat;
-      -webkit-mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.55) 30%,#000 62%);
-              mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.55) 30%,#000 62%);
+      background:
+        linear-gradient(90deg,rgba(14,42,68,.90) 0%,rgba(14,42,68,.74) 34%,rgba(14,42,68,.30) 62%,rgba(14,42,68,.05) 100%),
+        url("/hero.jpg") 50% 14%/cover no-repeat;
     }
+    header.hero h1,header.hero .lead,.brand .nome{text-shadow:0 2px 14px rgba(8,24,40,.55)}
   }
   header.hero svg.arc{position:absolute;left:0;right:0;bottom:-2px;width:100%;height:56px}
   .brand{display:flex;align-items:center;gap:14px;margin:0 0 30px}
