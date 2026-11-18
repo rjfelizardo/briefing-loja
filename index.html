@@ -98,7 +98,7 @@
     border-left:5px solid var(--signal);
     border-radius:var(--radius);
     padding:18px 20px;
-    margin:-52px 0 26px;
+    margin:0 0 18px;
     position:relative;
     box-shadow:var(--shadow);
   }
@@ -111,7 +111,7 @@
   .notice p{margin:0;color:var(--ink-soft);font-size:16px}
 
   /* ---------- Formulário ---------- */
-  form{padding-bottom:40px}
+  form{padding-bottom:40px;margin-top:-52px;position:relative}
   fieldset{
     margin:0 0 18px;padding:26px 24px;
     background:var(--paper);
@@ -193,6 +193,25 @@
   fieldset.invalid{border-color:var(--error);box-shadow:0 0 0 3px rgba(179,38,30,.10)}
   fieldset.invalid .err{display:block}
 
+  /* selo de marcado nos cartões de tipo */
+  #tipoOpts .opt > span::after{
+    content:"";position:absolute;right:14px;top:14px;
+    width:22px;height:22px;border-radius:50%;
+    border:2px solid #c3d1de;background:#fff;
+    transition:border-color .15s,background .15s;
+  }
+  #tipoOpts .opt input:checked + span::after{
+    border-color:var(--bridge);
+    background:var(--bridge) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/13px no-repeat;
+  }
+  #tipoOpts .opt > span{padding-right:46px}
+
+  /* título de cada parte quando há mais de um tipo */
+  .secao{display:none;align-items:center;gap:12px;margin:26px 0 14px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:20px;color:var(--bridge-dark)}
+  .secao::before{content:"";flex:none;width:10px;height:26px;border-radius:5px;background:var(--signal)}
+  .secao::after{content:"";flex:1;height:1px;background:var(--line)}
+  form.multi .secao{display:flex}
+
   /* ---------- Botão enviar ---------- */
   .send{
     width:100%;border:0;cursor:pointer;
@@ -260,14 +279,6 @@
 
 <main class="wrap">
 
-  <div class="notice">
-    <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></div>
-    <div>
-    <strong id="noticeTitulo">Por que tantas perguntas?</strong>
-    <p id="noticeTexto">Cada projeto tem partes diferentes, e cada recurso muda o valor e o prazo. Escolha o tipo de produto abaixo e responda com calma. Quanto mais detalhes, mais preciso o orçamento.</p>
-    </div>
-  </div>
-
   <div class="done" id="done" role="status">
     <div class="ok"><svg viewBox="0 0 24 24"><path d="M5 12l5 5L20 7"/></svg></div>
     <h2>Quase lá!</h2>
@@ -297,14 +308,23 @@
 
     <fieldset id="fsTipo" data-required="1">
       <legend>O que você quer criar? <span class="req">*</span></legend>
-      <p class="hint">Escolha o tipo de produto. As perguntas seguintes se ajustam à sua escolha.</p>
+      <p class="hint">Pode marcar mais de uma opção, se o seu projeto juntar mais de um tipo (por exemplo, site e automação). As perguntas se ajustam ao que você escolher.</p>
       <div class="opts" id="tipoOpts"></div>
-      <p class="err">Escolha uma opção.</p>
+      <p class="err">Escolha pelo menos uma opção.</p>
     </fieldset>
 
+    <div class="notice" id="noticeBox" hidden>
+      <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg></div>
+      <div>
+      <strong id="noticeTitulo">Por que tantas perguntas?</strong>
+      <p id="noticeTexto">Cada projeto tem partes diferentes, e cada recurso muda o valor e o prazo. Escolha o tipo de produto abaixo e responda com calma. Quanto mais detalhes, mais preciso o orçamento.</p>
+      </div>
+    </div>
+
     <div id="blocoLoja" hidden>
+    <div class="secao">Loja virtual</div>
     <fieldset data-q="venda" data-required="1">
-      <legend>1. O que você pretende vender? <span class="req">*</span></legend>
+      <legend><span class="num"></span> O que você pretende vender? <span class="req">*</span></legend>
       <p class="hint">Marque tudo que se aplica.</p>
       <div class="opts">
         <label class="opt check"><input type="checkbox" name="venda" value="Produtos físicos"><span>Produtos físicos</span></label>
@@ -320,7 +340,7 @@
     </fieldset>
 
     <fieldset data-q="qtd" data-required="1">
-      <legend>2. Quantos produtos, aproximadamente? <span class="req">*</span></legend>
+      <legend><span class="num"></span> Quantos produtos, aproximadamente? <span class="req">*</span></legend>
       <div class="opts">
         <label class="opt"><input type="radio" name="qtd" value="Até 10"><span>Até 10</span></label>
         <label class="opt"><input type="radio" name="qtd" value="De 10 a 50"><span>De 10 a 50</span></label>
@@ -330,7 +350,7 @@
     </fieldset>
 
     <fieldset data-q="variacoes" data-required="1">
-      <legend>3. Os produtos têm variações? <span class="req">*</span></legend>
+      <legend><span class="num"></span> Os produtos têm variações? <span class="req">*</span></legend>
       <p class="hint">Por exemplo: tamanho, cor, sabor, modelo.</p>
       <div class="opts">
         <label class="opt"><input type="radio" name="variacoes" value="Sim"><span>Sim</span></label>
@@ -341,7 +361,7 @@
     </fieldset>
 
     <fieldset data-q="pagamento" data-required="1">
-      <legend>4. Como quer receber os pagamentos? <span class="req">*</span></legend>
+      <legend><span class="num"></span> Como quer receber os pagamentos? <span class="req">*</span></legend>
       <p class="hint">Marque tudo que se aplica.</p>
       <div class="opts">
         <label class="opt check"><input type="checkbox" name="pagamento" value="Pix"><span>Pix</span></label>
@@ -353,7 +373,7 @@
     </fieldset>
 
     <fieldset data-q="entrega" data-required="1">
-      <legend>5. Como será a entrega? <span class="req">*</span></legend>
+      <legend><span class="num"></span> Como será a entrega? <span class="req">*</span></legend>
       <p class="hint">Marque tudo que se aplica.</p>
       <div class="opts">
         <label class="opt check"><input type="checkbox" name="entrega" value="Correios"><span>Correios</span></label>
@@ -366,7 +386,7 @@
     </fieldset>
 
     <fieldset data-q="painel" data-required="1">
-      <legend>6. Quer um painel para cadastrar produtos e acompanhar pedidos sozinha(o)? <span class="req">*</span></legend>
+      <legend><span class="num"></span> Quer um painel para cadastrar produtos e acompanhar pedidos sozinha(o)? <span class="req">*</span></legend>
       <div class="opts">
         <label class="opt"><input type="radio" name="painel" value="Sim, quero autonomia"><span>Sim, quero ter autonomia</span></label>
         <label class="opt"><input type="radio" name="painel" value="Não, prefiro que a Bridge atualize"><span>Não, prefiro que você atualize para mim</span></label>
@@ -376,7 +396,7 @@
     </fieldset>
 
     <fieldset data-q="material" data-required="1">
-      <legend>7. O que você já tem pronto? <span class="req">*</span></legend>
+      <legend><span class="num"></span> O que você já tem pronto? <span class="req">*</span></legend>
       <p class="hint">Marque tudo que já existe hoje.</p>
       <div class="opts">
         <label class="opt check"><input type="checkbox" name="material" value="Logo"><span>Logo</span></label>
@@ -389,7 +409,7 @@
     </fieldset>
 
     <fieldset data-q="canais" data-required="1">
-      <legend>8. Você já vende hoje? Onde? <span class="req">*</span></legend>
+      <legend><span class="num"></span> Você já vende hoje? Onde? <span class="req">*</span></legend>
       <div class="opts">
         <label class="opt check"><input type="checkbox" name="canais" value="Instagram"><span>Instagram</span></label>
         <label class="opt check"><input type="checkbox" name="canais" value="WhatsApp"><span>WhatsApp</span></label>
@@ -401,36 +421,15 @@
     </fieldset>
 
     <fieldset>
-      <legend>9. Quais sites você gosta como referência?</legend>
+      <legend><span class="num"></span> Quais sites você gosta como referência?</legend>
       <p class="hint">Cole 1 ou 2 links ou nomes de lojas que você admira.</p>
       <textarea id="referencias" name="referencias" placeholder="Ex.: www.exemplo.com.br"></textarea>
-    </fieldset>
-
-    <fieldset data-q="prazo" data-required="1">
-      <legend>10. Qual o prazo ideal? <span class="req">*</span></legend>
-      <div class="opts">
-        <label class="opt"><input type="radio" name="prazo" value="O mais rápido possível"><span>O mais rápido possível</span></label>
-        <label class="opt"><input type="radio" name="prazo" value="Até 30 dias"><span>Até 30 dias</span></label>
-        <label class="opt"><input type="radio" name="prazo" value="Mais de 30 dias"><span>Mais de 30 dias, sem pressa</span></label>
-      </div>
-      <p class="err">Escolha uma opção.</p>
-    </fieldset>
-
-    <fieldset data-q="investimento" data-required="1">
-      <legend>11. Qual faixa de investimento você tem em mente? <span class="req">*</span></legend>
-      <p class="hint">Isso me ajuda a indicar a solução que cabe no seu bolso.</p>
-      <div class="opts">
-        <label class="opt"><input type="radio" name="investimento" value="Até R$ 1.500"><span>Até R$ 1.500</span></label>
-        <label class="opt"><input type="radio" name="investimento" value="R$ 1.500 a R$ 3.500"><span>R$ 1.500 a R$ 3.500</span></label>
-        <label class="opt"><input type="radio" name="investimento" value="R$ 3.500 a R$ 7.000"><span>R$ 3.500 a R$ 7.000</span></label>
-        <label class="opt"><input type="radio" name="investimento" value="Acima de R$ 7.000"><span>Acima de R$ 7.000</span></label>
-      </div>
-      <p class="err">Escolha uma opção.</p>
     </fieldset>
 
     </div>
 
     <div id="blocoOutros" hidden></div>
+    <div id="blocoComum" hidden></div>
 
     <fieldset id="fsObs" hidden>
       <legend>Quer acrescentar algo?</legend>
@@ -550,9 +549,11 @@
     }
   };
   var ORDEM = ['loja','site','appweb','appnativo','auto','outro'];
-  var tipoAtual = '';
+  var tiposSel = [];
+  var CURTO = {loja:'Loja', site:'Site', appweb:'App web', appnativo:'App nativo', auto:'Automação', outro:'Outro'};
+  var LOJA_INV = ['Até R$ 1.500','R$ 1.500 a R$ 3.500','R$ 3.500 a R$ 7.000','Acima de R$ 7.000'];
 
-  // Cartões de escolha do tipo
+  // Cartões de escolha do tipo (pode marcar mais de um)
   var ICONES = {
     loja:'<path d="M6 7h12l-1 12H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/>',
     site:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01"/>',
@@ -563,48 +564,107 @@
   };
   $('tipoOpts').innerHTML = ORDEM.map(function(id){
     var t = TIPOS[id];
-    return '<label class="opt"><input type="radio" name="tipo" value="'+id+'"><span><i class="tipo-ico"><svg viewBox="0 0 24 24" aria-hidden="true">'+ICONES[id]+'</svg></i><b class="tipo-nome">'+esc(t.nome)+'</b><span class="tipo-desc">'+esc(t.desc)+'</span></span></label>';
+    return '<label class="opt check"><input type="checkbox" name="tipo" value="'+id+'"><span><i class="tipo-ico"><svg viewBox="0 0 24 24" aria-hidden="true">'+ICONES[id]+'</svg></i><b class="tipo-nome">'+esc(t.nome)+'</b><span class="tipo-desc">'+esc(t.desc)+'</span></span></label>';
   }).join('');
 
-  function renderQuestoes(id){
-    var defs = TIPOS[id].q, n = 0, h = '';
-    defs.forEach(function(d){
-      n++;
+  // Uma seção por tipo (a loja já está no HTML). Prazo e investimento são comuns e ficam no fim.
+  function htmlQuestoes(id){
+    var h = '';
+    TIPOS[id].q.forEach(function(d){
+      if (d.k === 'prazo' || d.k === 'inv') return;
+      var nm = 'x_'+id+'_'+d.k;
       var tag = (d.req ? ' <span class="req">*</span>' : '');
-      h += '<fieldset data-q="'+d.k+'"'+(d.req ? ' data-required="1"' : '')+'><legend>'+n+'. '+esc(d.q)+tag+'</legend>';
+      h += '<fieldset data-q="'+nm+'"'+(d.req ? ' data-required="1"' : '')+'><legend><span class="num"></span> '+esc(d.q)+tag+'</legend>';
       if (d.hint) h += '<p class="hint">'+esc(d.hint)+'</p>';
       if (d.t === 'radio' || d.t === 'check'){
         h += '<div class="opts">' + d.o.map(function(o){
-          return '<label class="opt'+(d.t==='check'?' check':'')+'"><input type="'+(d.t==='check'?'checkbox':'radio')+'" name="x_'+d.k+'" value="'+esc(o)+'"><span>'+esc(o)+'</span></label>';
+          return '<label class="opt'+(d.t==='check'?' check':'')+'"><input type="'+(d.t==='check'?'checkbox':'radio')+'" name="'+nm+'" value="'+esc(o)+'"><span>'+esc(o)+'</span></label>';
         }).join('') + '</div>';
       } else if (d.t === 'area'){
-        h += '<textarea name="x_'+d.k+'" placeholder="'+esc(d.ph||'')+'"></textarea>';
+        h += '<textarea name="'+nm+'" placeholder="'+esc(d.ph||'')+'"></textarea>';
       } else {
-        h += '<input type="text" name="x_'+d.k+'" placeholder="'+esc(d.ph||'')+'">';
+        h += '<input type="text" name="'+nm+'" placeholder="'+esc(d.ph||'')+'">';
       }
       h += '<p class="err">'+(d.t==='radio'||d.t==='check' ? 'Escolha uma opção.' : 'Preencha este campo.')+'</p></fieldset>';
     });
-    $('blocoOutros').innerHTML = h;
+    return h;
+  }
+  $('blocoOutros').innerHTML = ORDEM.filter(function(id){ return id !== 'loja'; }).map(function(id){
+    return '<div id="bloco_'+id+'" hidden><div class="secao">'+esc(TIPOS[id].nome)+'</div>'+htmlQuestoes(id)+'</div>';
+  }).join('');
+
+  function opcoesInv(){
+    if (tiposSel.length > 1) return INV_ALTO;
+    if (tiposSel[0] === 'loja') return LOJA_INV;
+    var q = TIPOS[tiposSel[0]].q;
+    for (var k=0;k<q.length;k++){ if (q[k].k === 'inv') return q[k].o; }
+    return INV_ALTO;
+  }
+  function radios(nome, lista){
+    return '<div class="opts">' + lista.map(function(o){
+      return '<label class="opt"><input type="radio" name="'+nome+'" value="'+esc(o)+'"><span>'+esc(o)+'</span></label>';
+    }).join('') + '</div>';
+  }
+  function renderComum(){
+    var multi = tiposSel.length > 1;
+    // preserva o que já foi marcado
+    var pz = valores('prazo')[0], iv = valores('investimento')[0];
+    $('blocoComum').innerHTML =
+      (multi ? '<div class="secao">Prazo e investimento</div>' : '') +
+      '<fieldset data-q="prazo" data-required="1"><legend><span class="num"></span> Qual o prazo ideal? <span class="req">*</span></legend>' +
+        (multi ? '<p class="hint">Considerando o projeto todo.</p>' : '') +
+        radios('prazo', PRAZO) + '<p class="err">Escolha uma opção.</p></fieldset>' +
+      '<fieldset data-q="investimento" data-required="1"><legend><span class="num"></span> Qual faixa de investimento você tem em mente? <span class="req">*</span></legend>' +
+        '<p class="hint">' + (multi ? 'Considerando o projeto todo. ' : '') + 'Isso me ajuda a indicar a solução que cabe no seu bolso.</p>' +
+        radios('investimento', opcoesInv()) + '<p class="err">Escolha uma opção.</p></fieldset>';
+    [['prazo',pz],['investimento',iv]].forEach(function(p){
+      if (!p[1]) return;
+      var els = form.querySelectorAll('input[name="'+p[0]+'"]');
+      for (var k=0;k<els.length;k++){ if (els[k].value === p[1]) els[k].checked = true; }
+    });
+  }
+  function renumerar(){
+    var n = 0, nums = form.querySelectorAll('.num');
+    for (var k=0;k<nums.length;k++){
+      if (nums[k].closest('[hidden]')) continue;
+      n++; nums[k].textContent = n + '.';
+    }
   }
 
-  function escolherTipo(id){
-    tipoAtual = id;
-    var t = TIPOS[id];
-    $('titulo').textContent = t.titulo;
-    $('noticeTitulo').textContent = t.noticeT;
-    $('noticeTexto').textContent = t.noticeX;
-    document.title = t.nome + ' | Briefing | Grupo Bridge';
-    if (id === 'loja'){
-      $('blocoOutros').innerHTML = '';
-      $('blocoOutros').hidden = true;
-      $('blocoLoja').hidden = false;
+  function escolherTipos(){
+    tiposSel = ORDEM.filter(function(id){
+      return form.querySelector('input[name="tipo"][value="'+id+'"]').checked;
+    });
+    var multi = tiposSel.length > 1, tem = !!tiposSel.length;
+    form.classList.toggle('multi', multi);
+
+    $('blocoLoja').hidden = tiposSel.indexOf('loja') < 0;
+    ORDEM.forEach(function(id){
+      if (id === 'loja') return;
+      $('bloco_'+id).hidden = tiposSel.indexOf(id) < 0;
+    });
+    $('blocoOutros').hidden = !tiposSel.some(function(id){ return id !== 'loja'; });
+    $('noticeBox').hidden = !tem;
+    $('blocoComum').hidden = !tem;
+    $('fsObs').hidden = !tem;
+    $('btnEnviar').hidden = !tem;
+    if (!tem){ document.title = 'Briefing do seu projeto | Grupo Bridge'; $('titulo').textContent = 'Vamos desenhar o seu projeto'; return; }
+
+    if (multi){
+      var nomes = tiposSel.map(function(id){ return TIPOS[id].nome; });
+      $('titulo').textContent = 'Vamos desenhar o seu projeto';
+      $('noticeTitulo').textContent = 'Vários tipos, um só orçamento';
+      $('noticeTexto').textContent = 'Você escolheu ' + nomes.join(', ').replace(/, ([^,]*)$/, ' e $1') + '. Responda as perguntas de cada parte e, no fim, informe o prazo e o investimento do projeto todo. Eu monto uma proposta única.';
+      document.title = 'Briefing | Grupo Bridge';
     } else {
-      renderQuestoes(id);
-      $('blocoLoja').hidden = true;
-      $('blocoOutros').hidden = false;
+      var t = TIPOS[tiposSel[0]];
+      $('titulo').textContent = t.titulo;
+      $('noticeTitulo').textContent = t.noticeT;
+      $('noticeTexto').textContent = t.noticeX;
+      document.title = t.nome + ' | Briefing | Grupo Bridge';
     }
-    $('fsObs').hidden = false;
-    $('btnEnviar').hidden = false;
+    renderComum();
+    renumerar();
   }
 
   function valores(nome){
@@ -637,14 +697,14 @@
       idFs.querySelector('.err').style.display = '';
     }
 
-    var tipoOk = !!tipoAtual;
+    var tipoOk = tiposSel.length > 0;
     $('fsTipo').classList.toggle('invalid', !tipoOk);
     if (!tipoOk){ okGeral = false; primeiroErro = primeiroErro || $('fsTipo'); }
 
     if (tipoOk){
-      var cont = tipoAtual === 'loja' ? $('blocoLoja') : $('blocoOutros');
-      var fss = cont.querySelectorAll('fieldset[data-required="1"]');
+      var fss = form.querySelectorAll('fieldset[data-required="1"]');
       for (var i=0;i<fss.length;i++){
+        if (fss[i].id === 'fsTipo' || fss[i].closest('[hidden]')) continue;
         var ok = respondido(fss[i]);
         fss[i].classList.toggle('invalid', !ok);
         if (!ok){ okGeral = false; primeiroErro = primeiroErro || fss[i]; }
@@ -657,7 +717,7 @@
 
   // Troca de tipo e limpeza de erros
   form.addEventListener('change', function(e){
-    if (e.target.name === 'tipo'){ escolherTipo(e.target.value); }
+    if (e.target.name === 'tipo'){ escolherTipos(); }
     var fs = e.target.closest('fieldset');
     if (fs && fs.classList.contains('invalid') && respondido(fs)) fs.classList.remove('invalid');
   });
@@ -666,13 +726,15 @@
     if (fs && fs.classList.contains('invalid') && respondido(fs)) fs.classList.remove('invalid');
   });
 
-  // Link com tipo já escolhido: ?tipo=loja | site | appweb | appnativo | auto | outro
+  // Link com tipos já escolhidos: ?tipo=loja  ou  ?tipo=site,auto  (loja | site | appweb | appnativo | auto | outro)
   try{
-    var pre = new URLSearchParams(location.search).get('tipo');
-    if (pre && TIPOS[pre]){
-      var r = form.querySelector('input[name="tipo"][value="'+pre+'"]');
-      if (r){ r.checked = true; escolherTipo(pre); }
-    }
+    var pre = (new URLSearchParams(location.search).get('tipo') || '').split(',');
+    var marcou = false;
+    pre.forEach(function(p){
+      var r = TIPOS[p] && form.querySelector('input[name="tipo"][value="'+p+'"]');
+      if (r){ r.checked = true; marcou = true; }
+    });
+    if (marcou) escolherTipos();
   }catch(e){}
 
   form.addEventListener('submit', function(e){
@@ -682,48 +744,46 @@
     var v = function(id){ return $(id).value.trim(); };
     var lista = function(nome){ return valores(nome).join(', ') || '-'; };
     var unico = function(nome){ var a = valores(nome); return a.length ? a[0] : '-'; };
-    var linhas;
+    var multi = tiposSel.length > 1;
+    var nomes = tiposSel.map(function(id){ return TIPOS[id].nome; });
+    var linhas = [], n = 0;
+    var item = function(rotulo, resp){ n++; linhas.push(n + ') ' + rotulo + ': ' + resp); };
 
-    if (tipoAtual === 'loja'){
-      // Formato mantido: o gerador de contrato lê estas linhas
-      linhas = [
-        'Olá! Preenchi o briefing da loja virtual.',
-        '',
-        'Tipo de produto: ' + TIPOS.loja.nome,
-        'Nome: ' + v('nome'),
-        'Negócio: ' + (v('negocio') || '-'),
-        'Contato: ' + v('contato'),
-        '',
-        '1) Vai vender: ' + lista('venda') + (v('venda_desc') ? ' (' + v('venda_desc') + ')' : ''),
-        '2) Qtd de produtos: ' + unico('qtd'),
-        '3) Variações: ' + unico('variacoes'),
-        '4) Pagamentos: ' + lista('pagamento'),
-        '5) Entrega: ' + lista('entrega'),
-        '6) Painel próprio: ' + unico('painel'),
-        '7) Já tem: ' + lista('material'),
-        '8) Vende hoje em: ' + lista('canais'),
-        '9) Referências: ' + (v('referencias') || '-'),
-        '10) Prazo: ' + unico('prazo'),
-        '11) Investimento: ' + unico('investimento')
-      ];
-    } else {
-      var t = TIPOS[tipoAtual];
-      linhas = [
-        'Olá! Preenchi o briefing do projeto: ' + t.nome + '.',
-        '',
-        'Tipo de produto: ' + t.nome,
-        'Nome: ' + v('nome'),
-        'Negócio: ' + (v('negocio') || '-'),
-        'Contato: ' + v('contato'),
-        ''
-      ];
-      t.q.forEach(function(d, i){
-        var resp = (d.t === 'check') ? lista('x_' + d.k)
-                 : (d.t === 'radio') ? unico('x_' + d.k)
-                 : (campo('x_' + d.k).replace(/\s*\n\s*/g, ' ') || '-');
-        linhas.push((i+1) + ') ' + d.s + ': ' + resp);
-      });
-    }
+    if (!multi && tiposSel[0] === 'loja') linhas.push('Olá! Preenchi o briefing da loja virtual.');
+    else linhas.push('Olá! Preenchi o briefing do projeto: ' + nomes.join(' + ') + '.');
+    linhas.push('', 'Tipo de produto: ' + nomes.join(' + '),
+      'Nome: ' + v('nome'),
+      'Negócio: ' + (v('negocio') || '-'),
+      'Contato: ' + v('contato'), '');
+
+    tiposSel.forEach(function(id){
+      if (multi) linhas.push('— ' + TIPOS[id].nome + ' —');
+      if (id === 'loja'){
+        // Formato mantido: o gerador de contrato lê estas linhas
+        item('Vai vender', lista('venda') + (v('venda_desc') ? ' (' + v('venda_desc') + ')' : ''));
+        item('Qtd de produtos', unico('qtd'));
+        item('Variações', unico('variacoes'));
+        item('Pagamentos', lista('pagamento'));
+        item('Entrega', lista('entrega'));
+        item('Painel próprio', unico('painel'));
+        item('Já tem', lista('material'));
+        item('Vende hoje em', lista('canais'));
+        item('Referências', v('referencias') || '-');
+      } else {
+        TIPOS[id].q.forEach(function(d){
+          if (d.k === 'prazo' || d.k === 'inv') return;
+          var nm = 'x_' + id + '_' + d.k;
+          var resp = (d.t === 'check') ? lista(nm)
+                   : (d.t === 'radio') ? unico(nm)
+                   : (campo(nm).replace(/\s*\n\s*/g, ' ') || '-');
+          item((multi ? CURTO[id] + ' – ' : '') + d.s, resp);
+        });
+      }
+      if (multi) linhas.push('');
+    });
+    if (multi) linhas.push('— Projeto todo —');
+    item('Prazo', unico('prazo'));
+    item('Investimento', unico('investimento'));
     if (v('obs')) linhas.push('', 'Obs: ' + v('obs'));
 
     var url = 'https://wa.me/' + WHATSAPP_DESTINO + '?text=' + encodeURIComponent(linhas.join('\n'));

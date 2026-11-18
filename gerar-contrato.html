@@ -404,7 +404,8 @@ $('btnBriefing').addEventListener('click', function(){
   er.classList.remove('show');
 
   var NOME2TIPO = {'loja virtual':'loja','site institucional':'site','app web / sistema':'app','app nativo (android e ios)':'appnativo','automação':'auto','outro / ainda não sei':'outro'};
-  var tp = NOME2TIPO[String(o['tipo de produto'] || 'loja virtual').toLowerCase()] || 'loja';
+  var tiposBriefing = String(o['tipo de produto'] || 'loja virtual').split(/\s*\+\s*/);
+  var tp = NOME2TIPO[tiposBriefing[0].toLowerCase()] || 'loja';
   if (tp === 'loja'){
     var e = escopoDaLoja(o);
     $('tipo').value = 'loja';
@@ -422,6 +423,7 @@ $('btnBriefing').addEventListener('click', function(){
     (o.contato ? '<br><b>Contato:</b> ' + esc(o.contato) : '') +
     (o['label:prazo'] ? '<br><b>Prazo desejado:</b> ' + esc(o['label:prazo']) : '') +
     (o['label:investimento'] ? '<br><b>Investimento previsto:</b> ' + esc(o['label:investimento']) : '') +
+    (tiposBriefing.length > 1 ? '<br><b>Projeto com mais de um tipo:</b> ' + esc(tiposBriefing.join(' + ')) + '. O modelo aplicado é o do primeiro; acrescente os itens dos demais.' : '') +
     (tp === 'loja' ? '<br><br>Escopo montado a partir das respostas. Confira os itens abaixo antes de gerar o link.' : '<br><br>Modelo do tipo "' + esc(o['tipo de produto']) + '" aplicado. Ajuste os itens com o que foi combinado na proposta antes de gerar o link.');
   box.style.display = 'block';
 });
